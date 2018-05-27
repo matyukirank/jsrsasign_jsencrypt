@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>JavaScript RSA Encryption</title>
+    <script src="./bin/jsencrypt.js"></script>
+    <script src="./bin/jsrsasign-all-min.js"></script>
+    <script type="text/javascript">
+      function test(){
+        console.log("Jsencrypt ...")
+        var public_key = document.getElementById("public_key").value;
+        var private_key = document.getElementById("private_key").value;
+        var input = document.getElementById("input").value;
+        var password = document.getElementById("password").value;
+
+        // HEX 
+        var key = KEYUTIL._getPlainPKCS8HexFromEncryptedPKCS8PEM(private_key, password);
+
+        var k = hextopem(key, "RSA PRIVATE KEY");
+        // var t = r.hextorstr(key, "DES-EDE3-CBC");
+
+        console.log(k);
+        document.getElementById("key").value = k;
+
+
+        // [JSEncrypt implementation]
+        // Encrypt with the public key...
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(public_key);
+        var encrypted = encrypt.encrypt(input);
+        console.log("Encrypted >> " + encrypted);
+
+        // Decrypt with the private key...
+        var decrypt = new JSEncrypt();
+        decrypt.setPrivateKey(k);
+        var uncrypted = decrypt.decrypt(encrypted);
+        console.log("Uncrypted >> " + uncrypted);
+
+        // Now a simple check to see if the round-trip worked.
+        if (uncrypted == input) {
+          alert('It works!!!');
+        }
+        else {
+          alert('Something went wrong....');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <p id="key"></p>
+    <label for="input">Public_key</label><br/>
+    <textarea id="public_key" name="public_key" type="text" rows=4 cols=70>Enter public_key</textarea><br/>
+    <label for="input">Encrypted private_key</label><br/>
+    <textarea id="private_key" name="private_key" type="text" rows=4 cols=70>Enter private_key</textarea><br/>
+    <label for="input">Encrypted password</label><br/>
+    <textarea id="password" name="password" type="text" rows=4 cols=70>Enter password</textarea><br/>
+    <label for="input">Text to encrypt:</label><br/>
+    <textarea id="input" name="input" type="text" rows=4 cols=70>This is a test!</textarea><br/>
+    <button onclick="test()">Test</button>
+  </body>
+</html>

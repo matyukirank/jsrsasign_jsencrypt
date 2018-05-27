@@ -1,0 +1,5 @@
+openssl genrsa -out rsa_1024_priv.pem 1024
+
+openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
+
+openssl pkcs8 -in rsa_1024_priv.pem -topk8 -v2 des3 -out pksc8_1024_priv.pem -passout pass:ghgxrdhgxldrn
